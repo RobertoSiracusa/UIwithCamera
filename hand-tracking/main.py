@@ -10,7 +10,7 @@ def run_hand_tracking_on_webcam():
 
     with mp_hands.Hands(
         model_complexity=0,
-        max_num_hands=2,
+        max_num_hands=1,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5,
     ) as hands:
@@ -34,7 +34,8 @@ def run_hand_tracking_on_webcam():
                     )
 
             cv2.imshow("Hand Tracking", cv2.flip(frame, 1))
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            cv2.waitKey(1)
+            if cv2.getWindowProperty("Hand Tracking", cv2.WND_PROP_VISIBLE) < 1:
                 break
 
     cam.release()
