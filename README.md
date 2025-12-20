@@ -1,35 +1,20 @@
-# Hand Tracking Script - Script de Detector de Manos 
+# Hand Tracking Script
 
 <img width="640" height="480" alt="Image" src="https://github.com/user-attachments/assets/db2ea975-e385-4ce9-8860-9a017f172ac3" />
-## English
 
 A real-time hand tracking application using **MediaPipe** and **OpenCV** that detects hand landmarks and recognizes finger gestures. The script can detect when the **index finger** and **middle finger** are raised, displaying the status on screen in real-time.
 
-### Features
+## Features
 - Real-time hand detection via webcam
 - Draws 21 hand landmarks with connections
-- Detects raised index finger (dedo índice)
-- Detects raised middle finger (dedo medio)
+- Detects raised index finger
+- Detects raised middle finger
 - Visual feedback with color-coded status (green = raised, red = down)
 - Mirror effect for natural interaction
 
 ---
 
-## Español
-
-Una aplicación de detección de manos en tiempo real usando **MediaPipe** y **OpenCV** que detecta los puntos de referencia de la mano y reconoce gestos de los dedos. El script puede detectar cuándo el **dedo índice** y el **dedo medio** están levantados, mostrando el estado en pantalla en tiempo real.
-
-### Características
-- Detección de manos en tiempo real con la webcam
-- Dibuja 21 landmarks de la mano con sus conexiones
-- Detecta si el dedo índice está levantado
-- Detecta si el dedo medio está levantado
-- Retroalimentación visual con colores (verde = levantado, rojo = abajo)
-- Efecto espejo para una interacción natural
-
----
-
-## Requirements - Requerimientos
+## Requirements
 
 | Requirement | Version |
 |-------------|---------|
@@ -38,34 +23,34 @@ Una aplicación de detección de manos en tiempo real usando **MediaPipe** y **O
 | OpenCV | Latest |
 | Webcam | Required |
 
-### Installation - Instalación
+### Installation
 
 ```bash
-# Create virtual environment | Crear entorno virtual
+# Create virtual environment
 python3 -m venv venv
 
-# Activate | Activar
+# Activate
 source venv/bin/activate        # macOS / Linux
 venv\Scripts\activate           # Windows
 
-# Install dependencies | Instalar dependencias
+# Install dependencies
 pip install -r requirements.txt
 ```
 
 ---
 
-## Run the Script - Ejecutar el Script
+## Run the Script
 
 ```bash
 cd hand-tracking
 python main.py
 ```
 
-**To exit | Para salir:** Close the window by clicking the X button.
+**To exit:** Close the window by clicking the X button.
 
 ---
 
-## How It Works - Cómo Funciona
+## How It Works
 
 ### MediaPipe Hand Landmarks
 
@@ -90,7 +75,7 @@ is_raised = tip.y < pip.y and tip.y < mcp.y
 
 ---
 
-## Project Structure - Estructura del Proyecto
+## Project Structure
 
 ```
 UIwithCamera/
@@ -102,4 +87,4 @@ UIwithCamera/
 
 ---
 
-Enjoy! | ¡Que te diviertas! 
+Enjoy!
