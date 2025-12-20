@@ -1,5 +1,6 @@
 # Hand Tracking Script - Script de Detector de Manos 
 
+<img width="640" height="480" alt="Image" src="https://github.com/user-attachments/assets/db2ea975-e385-4ce9-8860-9a017f172ac3" />
 ## English
 
 A real-time hand tracking application using **MediaPipe** and **OpenCV** that detects hand landmarks and recognizes finger gestures. The script can detect when the **index finger** and **middle finger** are raised, displaying the status on screen in real-time.
