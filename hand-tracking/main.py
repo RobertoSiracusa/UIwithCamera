@@ -95,7 +95,7 @@ def run_hand_tracking_on_webcam():
                     cv2.putText(
                         frame,
                         status_text2,
-                        (10, 60),
+                        (10, 80),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         1,
                         color2,
