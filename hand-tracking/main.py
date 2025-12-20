@@ -11,6 +11,10 @@ INDEX_FINGER_DIP = 7   # Articulación distal
 INDEX_FINGER_PIP = 6   # Articulación proximal
 INDEX_FINGER_MCP = 5   # Nudillo (base del dedo)
 
+MEDIUM_FINGER_TIP = 12
+MEDIUM_FINGER_DIP = 11
+MEDIUM_FINGER_PIP = 10
+MEDIUM_FINGER_MCP = 9
 
 def is_index_finger_raised(hand_landmarks):
     """
@@ -35,6 +39,13 @@ def is_index_finger_raised(hand_landmarks):
     
     return is_raised
 
+def is_medium_finger_raised(hand_landmarks):
+    tip = hand_landmarks.landmark[MEDIUM_FINGER_TIP]
+    pip = hand_landmarks.landmark[MEDIUM_FINGER_PIP]
+    mcp = hand_landmarks.landmark[MEDIUM_FINGER_MCP]
+
+    is_raised = tip.y < pip.y and tip.y < mcp.y or tip.y < mcp.y
+    return is_raised
 
 def run_hand_tracking_on_webcam():
     
@@ -63,11 +74,13 @@ def run_hand_tracking_on_webcam():
                 for hand_landmarks in results.multi_hand_landmarks:
                     # Detectar si el índice está levantado
                     index_raised = is_index_finger_raised(hand_landmarks)
+                    medium_raised = is_medium_finger_raised(hand_landmarks)
                     
                     # Mostrar estado en pantalla
                     status_text = "INDICE LEVANTADO" if index_raised else "INDICE ABAJO"
                     color = (0, 255, 0) if index_raised else (0, 0, 255)
-                    
+                    status_text2 = "MEDIO LEVANTADO" if medium_raised else "MEDIO ABAJO"
+                    color2 = (0, 255, 0) if medium_raised else (0, 0, 255)
                     cv2.putText(
                         frame,
                         status_text,
@@ -75,6 +88,17 @@ def run_hand_tracking_on_webcam():
                         cv2.FONT_HERSHEY_SIMPLEX,
                         1,
                         color,
+                        2,
+                        cv2.LINE_AA
+                    )
+                    # poner texto en frame de camara
+                    cv2.putText(
+                        frame,
+                        status_text2,
+                        (10, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        color2,
                         2,
                         cv2.LINE_AA
                     )
