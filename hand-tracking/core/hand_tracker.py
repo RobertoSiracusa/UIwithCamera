@@ -14,8 +14,8 @@ from constants.landmarks import (
     THUMB_TIP, INDEX_FINGER_TIP, MIDDLE_FINGER_TIP,
     RING_FINGER_TIP, PINKY_TIP
 )
-from detection.finger_detection import is_index_finger_raised, is_middle_finger_raised, is_thumb_raised
-from visualization.drawing import draw_finger_rectangle, draw_status_text
+from detection.finger_detection import is_index_finger_raised, is_middle_finger_raised, is_thumb_raised, get_pinch_level
+from visualization.drawing import draw_finger_rectangle, draw_status_text, draw_pinch_status
 
 
 class HandTracker:
@@ -105,10 +105,13 @@ class HandTracker:
             index_text = "INDICE LEVANTADO" if index_raised else "INDICE ABAJO"
             middle_text = "MEDIO LEVANTADO" if middle_raised else "MEDIO ABAJO"
             thumb_text = "PULGAR LEVANTADO" if thumb_raised else "PULGAR ABAJO"
-            # Draw status text
             draw_status_text(frame, index_text, (10, 40), index_color)
             draw_status_text(frame, middle_text, (10, 80), middle_color)
             draw_status_text(frame, thumb_text, (10, 120), thumb_color)
+            
+            # Draw pinch status
+            pinch_level = get_pinch_level(hand_landmarks, height, width)
+            draw_pinch_status(frame, pinch_level)
             
             # Draw rectangles on all fingertips
             draw_finger_rectangle(frame, hand_landmarks, THUMB_TIP, height, width, color=thumb_color)

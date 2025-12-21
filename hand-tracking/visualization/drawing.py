@@ -81,3 +81,38 @@ def draw_status_text(frame, text: str, position: Tuple[int, int],
         thickness,
         cv2.LINE_AA
     )
+
+
+def draw_pinch_status(frame, pinch_level: int, position: tuple = (10, 160),
+                      font_scale: float = 1, thickness: int = 2) -> None:
+    """
+    Draws pinch status text based on the pinch level (0-3).
+    
+    Args:
+        frame: Video frame to draw on.
+        pinch_level: Level from 0-3 (0=closed, 3=open).
+        position: (x, y) position for the text.
+        font_scale: Font scale factor. Default: 1.
+        thickness: Text thickness. Default: 2.
+    """
+    # Map level to text and color
+    status_map = {
+        0: ("PINCH: CERRADO", (255, 0, 0)),    # Blue - closed
+        1: ("PINCH: CERCA", (0, 165, 255)),    # Orange
+        2: ("PINCH: MEDIO", (0, 255, 255)),    # Yellow
+        3: ("PINCH: ABIERTO", (0, 255, 0))     # Green - open
+    }
+    
+    text, color = status_map.get(pinch_level, ("PINCH: ???", (255, 255, 255)))
+    
+    cv2.putText(
+        frame,
+        text,
+        position,
+        cv2.FONT_HERSHEY_SIMPLEX,
+        font_scale,
+        color,
+        thickness,
+        cv2.LINE_AA
+    )
+
