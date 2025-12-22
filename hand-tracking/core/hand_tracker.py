@@ -15,7 +15,7 @@ from constants.landmarks import (
     RING_FINGER_TIP, PINKY_TIP
 )
 from detection.finger_detection import is_index_finger_raised, is_middle_finger_raised, is_thumb_raised, get_pinch_level
-from visualization.drawing import draw_finger_rectangle, draw_status_text, draw_pinch_status
+from visualization.drawing import draw_finger_rectangle, draw_status_text, draw_pinch_status, draw_pinch_line
 
 
 class HandTracker:
@@ -112,6 +112,9 @@ class HandTracker:
             # Draw pinch status
             pinch_level = get_pinch_level(hand_landmarks, height, width)
             draw_pinch_status(frame, pinch_level)
+            
+            # Draw line between thumb and index tips
+            draw_pinch_line(frame, hand_landmarks, height, width, THUMB_TIP, INDEX_FINGER_TIP)
             
             # Draw rectangles on all fingertips
             draw_finger_rectangle(frame, hand_landmarks, THUMB_TIP, height, width, color=thumb_color)

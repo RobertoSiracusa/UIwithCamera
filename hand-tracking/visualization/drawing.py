@@ -116,3 +116,48 @@ def draw_pinch_status(frame, pinch_level: int, position: tuple = (10, 160),
         cv2.LINE_AA
     )
 
+
+def draw_pinch_line(frame, hand_landmarks, height: int, width: int,
+                    thumb_tip_idx: int, index_tip_idx: int) -> None:
+    """
+    Draws a line between thumb tip and index tip.
+    Color and thickness vary based on distance (pinch level).
+    
+    Args:
+        frame: Video frame to draw on.
+        hand_landmarks: Hand landmarks from MediaPipe.
+        height: Frame height in pixels.
+        width: Frame width in pixels.
+        thumb_tip_idx: Landmark index for thumb tip.
+        index_tip_idx: Landmark index for index finger tip.
+    """
+    import math
+    
+    thumb = hand_landmarks.landmark[thumb_tip_idx]
+    index = hand_landmarks.landmark[index_tip_idx]
+    
+    # Convert to pixel coordinates
+    thumb_pos = (int(thumb.x * width), int(thumb.y * height))
+    index_pos = (int(index.x * width), int(index.y * height))
+    
+    # Calculate distance for color/thickness
+    dx = thumb_pos[0] - index_pos[0]
+    dy = thumb_pos[1] - index_pos[1]
+    distance = math.sqrt(dx**2 + dy**2)
+    
+    # Map distance to color and thickness
+    if distance < 30:
+        color = (255, 0, 0)      # Blue - closed
+        thickness = 6
+    elif distance < 60:
+        color = (0, 165, 255)    # Orange
+        thickness = 5
+    elif distance < 100:
+        color = (0, 255, 255)    # Yellow
+        thickness = 4
+    else:
+        color = (0, 255, 0)      # Green - open
+        thickness = 3
+    
+    cv2.line(frame, thumb_pos, index_pos, color, thickness)
+
