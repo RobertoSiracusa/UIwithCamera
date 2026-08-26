@@ -17,37 +17,114 @@ A real-time hand tracking application using MediaPipe and OpenCV that detects ha
 
 ## Requirements
 
-| Requirement | Version |
-|-------------|---------|
-| Python | 3.10+ |
-| MediaPipe | Latest |
-| OpenCV | Latest |
-| Webcam | Required |
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Python | 3.10 - 3.12 | 3.11 recommended |
+| MediaPipe | `>=0.10.0, <0.11.0` | Classical solutions API compatibility |
+| OpenCV | `>=4.8.0` | Video capture and UI rendering |
+| Webcam | Required | Built-in or external USB |
 
-### Installation
+---
+
+## Installation by Operating System
+
+### macOS (Apple Silicon & Intel)
 
 ```bash
+# Clone or navigate to the project directory
+cd UIwithCamera
+
 # Create virtual environment
 python3 -m venv venv
 
-# Activate
-source venv/bin/activate        # macOS / Linux
-venv\Scripts\activate           # Windows
+# Activate virtual environment
+source venv/bin/activate
 
 # Install dependencies
 pip install -r hand-tracking/requirements.txt
+```
+
+### Fedora Linux / Red Hat / CentOS
+
+```bash
+# Ensure system prerequisites and video access (Fedora)
+sudo dnf install -y python3-devel gcc
+
+# Add user to video group for camera access (logout/login may be needed)
+sudo usermod -aG video $USER
+
+# Navigate to the project directory
+cd UIwithCamera
+
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Install dependencies
+pip install -r hand-tracking/requirements.txt
+```
+
+### Windows (PowerShell / Command Prompt)
+
+```powershell
+# Navigate to the project directory
+cd UIwithCamera
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment (PowerShell)
+.\venv\Scripts\Activate.ps1
+# Or in Command Prompt:
+# venv\Scripts\activate.bat
+
+# Install dependencies
+pip install -r hand-tracking\requirements.txt
 ```
 
 ---
 
 ## Run the Application
 
+You can run the application directly from the root project folder or from `hand-tracking/`:
+
 ```bash
+# Run with default settings (camera index 0)
+python hand-tracking/main.py
+
+# Or from within the hand-tracking directory
 cd hand-tracking
 python main.py
 ```
 
-To exit: Close the window by clicking the X button.
+### Optional Arguments
+
+```bash
+# Select a specific camera index (e.g., 1 for external USB webcam)
+python hand-tracking/main.py --camera 1
+
+# Change MediaPipe model complexity (0 = fastest/light, 1 = balanced, 2 = highest accuracy)
+python hand-tracking/main.py --complexity 1
+
+# Detect multiple hands
+python hand-tracking/main.py --max-hands 2
+```
+
+### How to Exit
+
+- Press **`q`** or **`ESC`** in the video window.
+- Or close the window by clicking the **X** button.
+
+---
+
+## Troubleshooting & Permissions
+
+- **macOS**: If camera access fails with `Error: No se pudo abrir la cámara`, open **System Settings > Privacy & Security > Camera** and enable permissions for your Terminal, iTerm, VS Code, or IDE.
+- **Fedora / Linux**: If `/dev/video0` cannot be opened, verify that your user belongs to the `video` group (`groups $USER`) and check available devices (`ls -l /dev/video*`). If using Wayland or flatpak, ensure the terminal session has access to video devices.
+- **Windows**: If the camera fails to initialize, go to **Settings > Privacy & Security > Camera** and make sure "Let desktop apps access your camera" is enabled.
+
 
 ---
 

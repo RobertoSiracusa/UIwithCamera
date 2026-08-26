@@ -48,12 +48,26 @@ class HandTracker:
         self.min_tracking_confidence = min_tracking_confidence
         self.window_name = "Hand Tracking"
     
+    def _print_camera_troubleshooting(self) -> None:
+        """Prints OS-specific camera troubleshooting hints."""
+        import sys
+        print(f"Error: No se pudo abrir la cámara con índice {self.camera_index}.")
+        if sys.platform == "darwin":
+            print("Sugerencia (macOS): Verifica los permisos en 'Ajustes del Sistema > Privacidad y Seguridad > Cámara'.")
+        elif sys.platform.startswith("linux"):
+            print("Sugerencia (Linux/Fedora): Verifica permisos en el grupo de video:")
+            print("  sudo usermod -aG video $USER")
+            print("y confirma que el dispositivo existe (ej: /dev/video0 o /dev/video1).")
+        elif sys.platform == "win32":
+            print("Sugerencia (Windows): Verifica permisos en 'Configuración > Privacidad y seguridad > Cámara'.")
+        else:
+            print("Verifica que la cámara esté conectada y no esté siendo usada por otra aplicación.")
+
     def run(self) -> None:
         """Main tracking loop. Captures frames and processes hands."""
         cam = cv2.VideoCapture(index=self.camera_index)
         if not cam.isOpened():
-            print(f"Error: No se pudo abrir la cámara con índice {self.camera_index}.")
-            print("Verifica los permisos de cámara en macOS (Ajustes del Sistema > Privacidad y Seguridad > Cámara).")
+            self._print_camera_troubleshooting()
             return
         
         try:
@@ -75,19 +89,24 @@ class HandTracker:
                     # Process frame
                     self._process_frame(frame, hands)
                     
-                    # Display and handle window close
+                    # Display frame
                     cv2.imshow(self.window_name, frame)
                     
-                    # Handle key presses (q or ESC to exit)
+                    # Handle key presses ('q' or ESC to exit)
                     key = cv2.waitKey(1) & 0xFF
                     if key == ord('q') or key == 27:
                         break
                     
-                    if cv2.getWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE) < 1:
-                        break
+                    # Handle window close button safely across OS backends
+                    try:
+                        if cv2.getWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE) < 1:
+                            break
+                    except Exception:
+                        pass
         finally:
             cam.release()
             cv2.destroyAllWindows()
+
 
     
     def _process_frame(self, frame, hands) -> None:
