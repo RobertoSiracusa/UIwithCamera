@@ -51,32 +51,44 @@ class HandTracker:
     def run(self) -> None:
         """Main tracking loop. Captures frames and processes hands."""
         cam = cv2.VideoCapture(index=self.camera_index)
+        if not cam.isOpened():
+            print(f"Error: No se pudo abrir la cámara con índice {self.camera_index}.")
+            print("Verifica los permisos de cámara en macOS (Ajustes del Sistema > Privacidad y Seguridad > Cámara).")
+            return
         
-        with mp_hands.Hands(
-            model_complexity=self.model_complexity,
-            max_num_hands=self.max_num_hands,
-            min_detection_confidence=self.min_detection_confidence,
-            min_tracking_confidence=self.min_tracking_confidence,
-        ) as hands:
-            while cam.isOpened():
-                success, frame = cam.read()
-                if not success:
-                    print("Empty frame! Skipping.")
-                    continue
-                
-                # Apply mirror effect
-                frame = cv2.flip(frame, 1)
-                
-                # Process frame
-                self._process_frame(frame, hands)
-                
-                # Display and handle window close
-                cv2.imshow(self.window_name, frame)
-                cv2.waitKey(1)
-                if cv2.getWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE) < 1:
-                    break
-        
-        cam.release()
+        try:
+            with mp_hands.Hands(
+                model_complexity=self.model_complexity,
+                max_num_hands=self.max_num_hands,
+                min_detection_confidence=self.min_detection_confidence,
+                min_tracking_confidence=self.min_tracking_confidence,
+            ) as hands:
+                while cam.isOpened():
+                    success, frame = cam.read()
+                    if not success:
+                        print("Empty frame! Skipping.")
+                        continue
+                    
+                    # Apply mirror effect
+                    frame = cv2.flip(frame, 1)
+                    
+                    # Process frame
+                    self._process_frame(frame, hands)
+                    
+                    # Display and handle window close
+                    cv2.imshow(self.window_name, frame)
+                    
+                    # Handle key presses (q or ESC to exit)
+                    key = cv2.waitKey(1) & 0xFF
+                    if key == ord('q') or key == 27:
+                        break
+                    
+                    if cv2.getWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE) < 1:
+                        break
+        finally:
+            cam.release()
+            cv2.destroyAllWindows()
+
     
     def _process_frame(self, frame, hands) -> None:
         """

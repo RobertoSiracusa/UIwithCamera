@@ -5,8 +5,10 @@ Provides functions to draw rectangles, text, and other
 visual elements on video frames.
 """
 
-import cv2
+import math
 from typing import Tuple
+
+import cv2
 
 
 def get_pixel_position(landmark, height: int, width: int) -> Tuple[int, int]:
@@ -131,8 +133,6 @@ def draw_pinch_line(frame, hand_landmarks, height: int, width: int,
         thumb_tip_idx: Landmark index for thumb tip.
         index_tip_idx: Landmark index for index finger tip.
     """
-    import math
-    
     thumb = hand_landmarks.landmark[thumb_tip_idx]
     index = hand_landmarks.landmark[index_tip_idx]
     
